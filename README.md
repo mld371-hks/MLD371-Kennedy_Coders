@@ -3,8 +3,8 @@
 ## Team
 
 - **Team name:** [To be confirmed; repository name: Kennedy_Coders]
-- **Members:** [Add team member names]
-- **Partner organization:** City of Plymouth, Minnesota
+- **Members:** [Oumar Diallo, Darion Akins, Philip Busick, Matt Wosje]
+- **Partner organization:** PsychArmor
 
 ## Repository structure
 
