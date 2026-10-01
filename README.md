@@ -2,7 +2,7 @@
 
 ## Team
 
-- **Team name:** [To be confirmed; repository name: Kennedy_Coders]
+- **Team name:** [Kennedy_Coders]
 - **Members:** [Oumar Diallo, Darion Akins, Philip Busick, Matt Wosje]
 - **Partner organization:** PsychArmor
 
