@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PsychArmor Production Map</title>
+<style>
+:root{--crimson:#A51C30;--ink:#1E1E1E;--ink2:#3A3F44;--parch:#F3F3F1;--mortar:#8C8179;--slate:#8996A0;--shade:#BAC5C6;
+--lane1:#FAFAF8;--lane2:#F1F2F0;--line:#D9DDDC;
+--red:#F7DADA;--redb:#B23A3A;--gold:#F6EAC2;--goldb:#B58A1B;--link:#2F5D7C;
+--sans:"Franklin Gothic Book","Libre Franklin","Helvetica Neue",Arial,sans-serif;
+--sansb:"Franklin Gothic Medium","Libre Franklin","Helvetica Neue",Arial,sans-serif;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--parch);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.page{max-width:1440px;margin:0 auto;padding:0 28px 48px}
+.top{border-top:6px solid var(--crimson);padding-top:18px}
+.kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#666}
+h1{font-family:var(--sansb);font-weight:normal;font-size:clamp(20px,2vw,27px);line-height:1.25;margin:6px 0 4px;max-width:1150px}
+.meta{font-size:12px;color:#666;margin-bottom:16px}
+.take{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.tk{background:#fff;border:1px solid var(--line);border-top:3px solid var(--ink);padding:12px 14px;font-size:13.5px;line-height:1.45}
+.tk .big{font-family:var(--sansb);font-size:24px;display:block;margin-bottom:2px}
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(243,243,241,.96);backdrop-filter:blur(4px);border-bottom:1px solid var(--line);padding:9px 0;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:12px;margin-bottom:8px}
+.seg{display:inline-flex;border:1px solid var(--slate);border-radius:4px;overflow:hidden}
+.seg button{border:0;border-right:1px solid var(--shade);background:#fff;padding:5px 11px;font:inherit;cursor:pointer;color:var(--ink)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:#fff}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;color:#333;align-items:center}
+.sw{display:inline-block;width:13px;height:13px;border-radius:2px;vertical-align:-2px;margin-right:5px;border:1px solid}
+.ln{display:inline-block;width:24px;border-top:2px solid var(--link);vertical-align:middle;margin-right:5px}.ln.d{border-top-style:dashed}
+.exhibit{background:#fff;border:1px solid var(--line);margin-top:22px;padding:16px 18px 18px}
+.exh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:7px;margin-bottom:12px;flex-wrap:wrap}
+.exh h2{font-family:var(--sansb);font-weight:normal;font-size:17px;margin:0}
+.exh h2 span{color:#777;font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px}
+.exh .note{font-size:12px;color:#666}
+.scroller{overflow-x:auto}
+.chart{--g:clamp(12px,1.5vw,22px);position:relative;display:grid;column-gap:var(--g);row-gap:0;min-width:900px}
+.ph{position:relative;background:var(--ink2);color:#fff;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:7px 18px 7px 12px;margin-bottom:8px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%,10px 50%);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph.first{clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%)}
+.ph small{opacity:.7;letter-spacing:0;text-transform:none;margin-left:4px}
+.lname{font-family:var(--sansb);font-size:12px;color:var(--ink2);padding:10px 10px 10px 0;border-top:1px solid var(--line);display:flex;align-items:center;line-height:1.25}
+.lbg{border-top:1px solid var(--line);margin:0 0 0 calc(var(--g) / -2)}
+.lbg.alt{background:var(--lane2)}
+.box{min-width:0;position:relative;z-index:2;margin:9px 0;background:#fff;border:1px solid #9aa3a8;border-radius:3px;padding:7px 8px 7px;font-size:12px;line-height:1.3;cursor:pointer;transition:box-shadow .15s,opacity .2s,transform .15s;align-self:center}
+.box:hover{box-shadow:0 3px 12px rgba(0,0,0,.14);transform:translateY(-1px)}
+.box:focus{outline:2px solid var(--ink);outline-offset:2px}
+.box.cost{background:var(--red);border-color:var(--redb)}
+.box.keep{background:var(--gold);border-color:var(--goldb)}
+.box .hd{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.num{flex:none;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-family:Arial,sans-serif}
+.lk{margin-left:auto;font-size:10px;color:var(--link);font-family:Arial,sans-serif;white-space:nowrap}
+.box b{font-family:var(--sansb);font-weight:normal;font-size:12.5px;display:block}
+.box .r{display:block;font-size:11px;color:#444;margin-top:3px}
+.box .t{display:block;font-size:11px;color:#666;font-style:italic}
+.box.sel{box-shadow:0 0 0 3px var(--ink)}
+.box.dim{opacity:.2}
+.box.glow{box-shadow:0 0 0 3px var(--link)}
+.dname{font-size:11px;color:#555;padding:8px 10px 0 0;border-top:1px solid var(--ink);line-height:1.25}
+.dl{border-top:1px solid var(--ink);padding-top:8px;text-align:center}
+.pill{display:inline-block;font-size:11px;font-family:Arial,sans-serif;border-radius:10px;padding:3px 7px;white-space:nowrap}
+.pill.mk{background:repeating-linear-gradient(45deg,#eee,#eee 4px,#f8f8f8 4px,#f8f8f8 8px);color:#555;border:1px dashed #bbb}
+svg.ar{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+svg.ar path{fill:none;stroke:#6f777c;stroke-width:1.4}
+.ilv{position:relative;display:grid;grid-template-columns:110px repeat(14,minmax(0,1fr));column-gap:8px;min-width:900px}
+.chip{position:relative;z-index:2;font-size:10.5px;line-height:1.2;background:#fff;border:1px solid #9aa3a8;border-radius:3px;padding:5px;cursor:pointer;min-height:44px}
+.chip.cost{background:var(--red);border-color:var(--redb)}.chip.keep{background:var(--gold);border-color:var(--goldb)}
+.chip.sel{box-shadow:0 0 0 3px var(--ink)}
+.chip .num{width:15px;height:15px;font-size:9px;margin-right:3px;vertical-align:1px}
+.ilab{font-family:var(--sansb);font-size:12px;color:var(--ink2);display:flex;align-items:center}
+.ilv .gap{grid-column:1/-1;height:120px}
+svg#links{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:visible;pointer-events:none}
+svg#links path{fill:none;stroke:var(--link);stroke-width:2.2;pointer-events:stroke;cursor:pointer;opacity:.85;transition:opacity .2s,stroke-width .2s}
+svg#links path.d{stroke-dasharray:6 5}
+svg#links path.hi{stroke-width:4;opacity:1}
+svg#links .dim{opacity:.12}
+svg#links g{pointer-events:all;cursor:pointer}
+svg#links g circle{fill:#fff;stroke:var(--link);stroke-width:2}
+svg#links g text{font:bold 11px Arial,sans-serif;fill:var(--link);text-anchor:middle;dominant-baseline:central}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.card{border:1px solid var(--line);border-left:4px solid var(--link);padding:10px 12px;font-size:13px;line-height:1.45;cursor:pointer;background:#fff;transition:box-shadow .15s}
+.card:hover{box-shadow:0 3px 10px rgba(0,0,0,.1)}
+.card.d{border-left-style:dashed}
+.card b{font-family:var(--sansb);font-weight:normal;display:block;margin-bottom:2px}
+.card .w{font-size:11px;color:#777;margin-top:4px;display:block}
+.card.sel{box-shadow:0 0 0 2px var(--ink)}
+.card .n{display:inline-flex;width:18px;height:18px;border-radius:50%;border:2px solid var(--link);color:var(--link);font:bold 10px Arial,sans-serif;align-items:center;justify-content:center;margin-right:6px}
+.caption{margin-top:22px;font-family:Georgia,serif;font-size:14px;line-height:1.6;max-width:1000px;color:#222}
+.src{font-size:11.5px;color:#666;margin-top:8px;line-height:1.5}
+#panel{position:fixed;right:18px;top:70px;width:350px;max-width:calc(100vw - 36px);max-height:calc(100vh - 90px);overflow-y:auto;background:#fff;border:1px solid var(--line);border-top:4px solid var(--crimson);box-shadow:0 10px 30px rgba(0,0,0,.18);padding:14px 16px;font-size:13px;line-height:1.5;z-index:30;transform:translateX(120%);transition:transform .22s ease}
+#panel.open{transform:none}
+#panel h3{font-family:var(--sansb);font-weight:normal;font-size:16px;margin:0 24px 8px 0;line-height:1.3}
+#panel .x{position:absolute;top:8px;right:10px;border:0;background:none;font-size:20px;cursor:pointer;color:#555}
+#panel dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-top:8px}
+#panel dd{margin:1px 0 0}
+#panel .badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;border:1px solid}
+@media (max-width:900px){.take,.cards{grid-template-columns:1fr}.page{padding:0 14px 40px}}
+@media print{.toolbar,#panel{display:none}.exhibit{break-inside:avoid}}
+</style></head><body>
+<div class="page">
+<div class="top">
+ <div class="kicker">MLD-371 · Kennedy Coders · PsychArmor · Process map, Studio 5 draft v6</div>
+ <h1>Course production takes 12–18 months, mostly spent waiting on research and review; the weekly podcast rests on one producer and duplicates course transcription work</h1>
+ <div class="meta">1 October 2026 · Built from public sources, not yet validated with staff · Click any step or connection for detail</div>
+</div>
+<div class="take">
+ <div class="tk"><span class="big">~75%*</span>of assumed elapsed course time is waiting on stakeholder research, SME, clinical, and reviewer input (steps 3–6, 9–10).</div>
+ <div class="tk"><span class="big">5 of 14</span>course steps run through one role, the Senior Manager of Learning &amp; Experience Design*. One post-production lead edits everything.</div>
+ <div class="tk"><span class="big">6</span>connections between the two processes, two confirmed. Shared marketing and duplicated transcription are the clearest overlaps.</div>
+</div>
+
+<div class="toolbar">
+ <div class="seg" id="filters"><button data-f="all" class="on">All steps</button><button data-f="cost">Costs</button><button data-f="keep">Worth keeping</button><button data-f="assumed">Assumptions</button><button data-f="confirmed">Confirmed</button></div>
+ <div class="lg">
+  <span><span class="sw" style="background:var(--red);border-color:var(--redb)"></span>Friction: a cost</span>
+  <span><span class="sw" style="background:var(--gold);border-color:var(--goldb)"></span>Friction: a signal worth keeping</span>
+  <span><span class="sw" style="background:#fff;border-color:#9aa3a8"></span>No friction marked</span>
+  <span><span class="ln"></span>Confirmed link</span><span><span class="ln d"></span>Assumed link</span>
+  <span><b>*</b> our assumption, not confirmed by PsychArmor</span>
+ </div>
+</div>
+
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 1a</span>Video course production, by role · steps 1–6</h2><div class="note">12–18 months, data collection to launch (PsychArmor FAQ) · ⇄ = connects to podcast · continues in 1b</div></div>
+ <div class="scroller"><div class="chart" id="chartA1"></div></div></section>
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 1b</span>Video course production, by role · steps 7–14</h2><div class="note">Continued from 1a · ⇄ = connects to podcast</div></div>
+ <div class="scroller"><div class="chart" id="chartA2"></div></div></section>
+
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 2</span>Behind the Mission podcast, by role</h2><div class="note">Repeats weekly, Tuesdays · about 30 min audio · ~286 episodes</div></div>
+ <div class="scroller"><div class="chart" id="chartB"></div></div></section>
+
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 3</span>Where the two processes connect</h2><div class="note">Hover or click a line, number, or card</div></div>
+ <div class="scroller"><div class="ilv" id="ilv"><svg id="links"></svg></div></div>
+ <div class="cards" id="cards"></div></section>
+
+<p class="caption">This map shows how PsychArmor likely produces its video courses and weekly podcast, built from the PsychArmor website and our 22 September correspondence, and not yet checked with staff. Confirmed from the site: the 12 to 18 month course timeline, stakeholder surveys and interviews, SME advisory panel review, in-house design team, staff roles, Duane France as podcast host and producer, Tuesday release cadence, podcast episodes used as resource material for the course library, and machine-style transcripts posted with raw speaker labels and errors. Everything marked with an asterisk, including tools, equipment, owners, delays, and dashed connections, is our assumption. Gold steps are where human judgment protects quality and safety on suicide-prevention and clinical content. Red steps are hypothesized time costs. The longest waits sit in research and review, the podcast runs largely on one person, and the two processes share people, promotion, and a transcription burden.</p>
+<div class="src">Sources: psycharmor.org/frequently-asked-questions, /team, /podcast, /btm102-transcription-1; Behind the Mission milestone article (13 Sep 2022); learn.psycharmor.org/collections; all accessed 1 Oct 2026. Correspondence with PsychArmor, 22 Sep 2026. Color scheme follows the Studio 5 prompt. Steps unchanged from v4; layout only.</div>
+</div>
+
+<aside id="panel" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><div id="pbody"></div></aside>
+
+<script>
+// id, title, role, tool, type, handoff, delay, why, lane
+const A=[
+["a1","Course need identified","CPIO / VP Partnerships","HubSpot deal record*","","hand-off","2–4 wks*","Starts from a client request or internal plan.",0],
+["a2","Scope and project plan","Senior Project Manager","Asana*","","hand-off","2–4 wks*","PMP-certified project manager on staff (team page).",1],
+["a3","Stakeholder research: surveys and interviews","Sr Mgr LXD + PM*","SurveyMonkey*, Zoom*","keep","analysis","3–4 mos*","FAQ confirms quantitative and qualitative data from stakeholders via surveys and interviews. Keep: this is what makes courses built with the military community, not just for them. Likely the longest single phase.",1],
+["a4","SME advisory panel review","SME advisory panel","Zoom*, Google Docs*","keep","wait on panel","1–2 mos*","FAQ confirms advisory panel review. Keep for credibility; the wait on volunteer experts is the cost.",2],
+["a5","Script with SME","Sr Mgr LXD + SME","Google Docs*","keep","wait on SME","1–2 mos*","Human-centered design is core to the product. Keep the judgment; watch the wait.",1],
+["a6","Clinical and CE review","Clinical Advisor","Google Docs comments*","keep","hand-off","3–4 wks*","Safety check on suicide-prevention and clinical content, plus CE requirements. Keep.",2],
+["a7","Film","Post Production Lead + SME on camera","In-house studio, camera, lav mics*","","hand-off","1–2 wks*","In-house video operation, unusual at ~16 staff.",3],
+["a8","Edit","Post Production Lead","Adobe Premiere Pro*","","hand-off","2–4 wks*","One post-production lead: a single-person capacity point.",3],
+["a9","Motion graphics","Motion Graphics Artists (2)","Adobe After Effects*","","wait on reviewers","3–4 wks*","Two artists on staff (team page).",3],
+["a10","Review and revision loop","SME + LXD + Production","Frame.io*","cost","hand-off","1–2 mos*","Cost: multiple reviewers, scattered feedback, repeat cycles.",3],
+["a11","Build: captions, quiz, CE setup, facilitator guide, participant journal","Sr Mgr LXD","Thinkific*, Rev*, InDesign*","cost","hand-off","2–3 wks*","Cost: repetitive packaging work. Supporting guides and journals confirmed on the course site.",1],
+["a12","Publish","LXD / PM","Thinkific*","","hand-off","1 wk*","Learning platform inferred from URL structure.",1],
+["a13","Promote","Marketing Manager","HubSpot, social","","in market","1–3 yrs*","One marketing manager. HubSpot confirmed from page source.",4],
+["a14","Update for new guidance or VA policy","Sr Mgr LXD*","Course inventory sheet*","cost","","","Cost: 250+ courses, many with CE credit, kept current by a small team.",1]];
+const B=[
+["b1","Pick topic and guest","Duane France, host and producer","Content calendar sheet*","","wait on guest","1–3 wks*","Duane France confirmed as producer (2022 article).",0],
+["b2","Book and schedule guest","Duane France*","Gmail + Calendly*","cost","hand-off","1 wk*","Cost: back-and-forth scheduling every week.",0],
+["b3","Record conversation, about 30 min","Host + guest","Zencastr or Riverside*, USB mics*","keep","hand-off","1–3 days*","Keep: the conversation is the product. Transcript speaker labels look like remote multitrack file names.",1],
+["b4","Edit audio","Duane France*","Descript*","","hand-off","2–4 days*","Weekly deadline on one person.",0],
+["b5","Show notes and transcript","Duane France* or Marketing Mgr*","Auto-transcription, posted largely unedited","cost","hand-off","1–2 days*","Cost and quality risk: posted transcripts show raw file-name speaker labels and errors (Episode 103).",0],
+["b6","Publish, Tuesdays","Duane France*","Podcast players + website; Libsyn*","","hand-off","same day*","Tuesday cadence and major podcast players confirmed (2022 article).",0],
+["b7","Promote","Marketing Manager","HubSpot, social","","","","Same marketing manager as course promotion.",2]];
+const L=[
+["a12","b6",0,"Podcast feeds the course library","Episodes serve as additional resource material for the 250+ course library (2022 article)."],
+["a13","b7",0,"One marketing manager promotes both","The same role and HubSpot channel carry courses and the podcast, competing for one person's week."],
+["a4","b1",1,"Podcast guests as an SME pipeline*","Guests are experts and partner leaders; likely a source for SMEs and advisory panel members."],
+["a3","b1",1,"Course research shapes podcast topics*","Stakeholder findings likely suggest episode themes, and episodes test topics before a full course."],
+["a11","b5",1,"Shared transcription burden*","Course captions and podcast transcripts are the same task done twice. One shared automation opportunity with human review."],
+["a14","b3",1,"Podcast surfaces new guidance*","Guests discuss new research and VA policy, an early signal for which courses need updates."]];
+const LA=["Leadership &amp; partnerships","Project mgmt &amp; learning design","SMEs &amp; clinical review","Video production","Marketing"];
+const CFG={
+ chartA1:{rows:A.slice(0,6),off:0,cont:"to step 7, Exhibit 1b",lanes:LA,phases:[["Plan",1,2],["Research &amp; design",3,6]],name:"Video course"},
+ chartA2:{rows:A.slice(6),off:6,from:"from step 6",lanes:LA,phases:[["Produce",7,10],["Package &amp; launch",11,13],["Maintain",14,14]],name:"Video course"},
+ chartB:{rows:B,off:0,lanes:["Host &amp; producer","Guest","Marketing"],phases:[["Prep",1,2],["Record",3,3],["Post-produce",4,5],["Release",6,7]],name:"Podcast"}};
+const all={};
+const wk=d=>{if(!d)return null;if(/same day/.test(d))return 0;const m=d.match(/([\d.]+)(?:–([\d.]+))?\s*(day|wk|mo|yr)/);if(!m)return null;const v=(+m[1]+ +(m[2]||m[1]))/2;return v*({day:1/7,wk:1,mo:4.3,yr:52}[m[3]])};
+function build(id){const c=CFG[id],el=document.getElementById(id),n=c.rows.length,lanes=c.lanes.length;
+ const o=c.off;el.style.gridTemplateColumns=`150px repeat(${n},minmax(0,1fr))`;
+ let h=`<div style="grid-row:1;grid-column:1"></div>`;
+ c.phases.forEach(([t,a,b],i)=>h+=`<div class="ph${i?'':' first'}" style="grid-row:1;grid-column:${a-o+1}/${b-o+2}">${t}<small>${a===b?'step '+a:'steps '+a+'–'+b}</small></div>`);
+ c.lanes.forEach((ln,i)=>{h+=`<div class="lname" style="grid-row:${i+2};grid-column:1">${ln}</div><div class="lbg${i%2?' alt':''}" style="grid-row:${i+2};grid-column:2/-1"></div>`});
+ const dr=lanes+2;h+=`<div class="dname" style="grid-row:${dr};grid-column:1">Wait before next step</div>`;
+ c.rows.forEach((s,i)=>{const [sid,t,r,tl,ty,al,d,why,lane]=s;const nl=L.filter(x=>x[0]===sid||x[1]===sid).length;
+  all[sid]={id:sid,t,r,tl,ty,al,d,why,lane:c.name,n:o+i+1,assumed:/\*/.test(r+tl+d),lname:c.lanes[lane]};
+  h+=`<div class="box ${ty}" id="${sid}" tabindex="0" style="grid-row:${lane+2};grid-column:${i+2}"><div class="hd"><span class="num">${o+i+1}</span>${nl?`<span class="lk" title="Connects to the other process">⇄ ${nl}</span>`:''}</div><b>${t}</b><span class="r">${r}</span><span class="t">${tl}</span></div>`;
+  const w=wk(d);let pill='';
+  if(al==='in market')pill=`<span class="pill mk" title="Time in market before update">in market ${d}</span>`;
+  else if(d){const a=Math.min(1,w/15);pill=`<span class="pill" style="background:rgba(178,58,58,${(.08+a*.82).toFixed(2)});color:${a>.45?'#fff':'#222'}" title="${al}">${d}</span>`}
+  else pill='<span class="pill" style="color:#999">—</span>';
+  h+=`<div class="dl" style="grid-row:${dr};grid-column:${i+2}">${pill}</div>`});
+ h+=`<svg class="ar"><defs><marker id="m${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6f777c" stroke="none"/></marker></defs></svg>`;
+ el.innerHTML=h;}
+function arrows(id){const el=document.getElementById(id),svg=el.querySelector('svg.ar'),cr=el.getBoundingClientRect(),rows=CFG[id].rows;
+ [...svg.querySelectorAll('.c')].forEach(p=>p.remove());
+ for(let i=0;i<rows.length-1;i++){const a=document.getElementById(rows[i][0]).getBoundingClientRect(),b=document.getElementById(rows[i+1][0]).getBoundingClientRect();
+  const x1=a.right-cr.left,y1=a.top+a.height/2-cr.top,x2=b.left-cr.left-1,y2=b.top+b.height/2-cr.top,xm=(x1+x2)/2;
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','c');
+  p.setAttribute('d',Math.abs(y1-y2)<2?`M${x1},${y1} L${x2},${y2}`:`M${x1},${y1} L${xm},${y1} L${xm},${y2} L${x2},${y2}`);
+  p.setAttribute('marker-end',`url(#m${id})`);svg.appendChild(p)}
+ const c=CFG[id],mk=(d,tx,x,y,anchor)=>{const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','c');p.setAttribute('d',d);p.setAttribute('stroke-dasharray','4 3');p.setAttribute('marker-end',`url(#m${id})`);svg.appendChild(p);
+  const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('class','c');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor',anchor);t.setAttribute('style','font:11px Arial,sans-serif;fill:#555');t.textContent=tx;svg.appendChild(t)};
+ if(c.cont){const a=document.getElementById(rows[rows.length-1][0]).getBoundingClientRect(),x1=a.right-cr.left,y=a.bottom-cr.top+18;mk(`M${x1-20},${a.bottom-cr.top} L${x1-20},${y} L${cr.width-4},${y}`,c.cont,cr.width-6,y-6,'end')}
+ if(c.from){const b=document.getElementById(rows[0][0]).getBoundingClientRect(),y=b.top+b.height/2-cr.top,x2=b.left-cr.left-1;mk(`M${x2-46},${y} L${x2},${y}`,c.from,x2-48,y-6,'start')}}
+build('chartA1');build('chartA2');build('chartB');
+// Exhibit 3
+const ilv=document.getElementById('ilv');
+let ih=`<div class="ilab" style="grid-row:1;grid-column:1">Video course</div>`;
+A.forEach((s,i)=>ih+=`<div class="chip ${s[4]}" data-id="${s[0]}" style="grid-row:1;grid-column:${i+2}"><span class="num">${i+1}</span>${s[1].split(':')[0]}</div>`);
+ih+=`<div class="gap" style="grid-row:2"></div><div class="ilab" style="grid-row:3;grid-column:1">Podcast</div>`;
+B.forEach((s,i)=>ih+=`<div class="chip ${s[4]}" data-id="${s[0]}" style="grid-row:3;grid-column:${2*i+2}/span 2"><span class="num">${i+1}</span>${s[1]}</div>`);
+ilv.insertAdjacentHTML('beforeend',ih);
+const lsvg=document.getElementById('links'),NS='http://www.w3.org/2000/svg';
+function links(){const r=ilv.getBoundingClientRect();lsvg.innerHTML='';
+ L.forEach((c,i)=>{const a=ilv.querySelector(`[data-id="${c[0]}"]`).getBoundingClientRect(),b=ilv.querySelector(`[data-id="${c[1]}"]`).getBoundingClientRect();
+  const same=L.filter(x=>x[1]===c[1]),off=(same.indexOf(c)-(same.length-1)/2)*22;
+  const x1=a.left+a.width/2-r.left,y1=a.bottom-r.top,x2=b.left+b.width/2-r.left+off,y2=b.top-r.top,my=(y1+y2)/2;
+  const p=document.createElementNS(NS,'path');p.setAttribute('d',`M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`);if(c[2])p.setAttribute('class','d');p.id='p'+i;
+  const g=document.createElementNS(NS,'g');g.id='g'+i;const mx=(x1+x2)/2;g.innerHTML=`<circle cx="${mx}" cy="${my}" r="10"></circle><text x="${mx}" y="${my}">${i+1}</text><title>${c[3]}</title>`;
+  [p,g].forEach(e=>{e.addEventListener('click',()=>pickLink(i));e.addEventListener('mouseenter',()=>hover(i));e.addEventListener('mouseleave',()=>hover(null))});
+  lsvg.appendChild(p);lsvg.appendChild(g)});applySel()}
+const cards=document.getElementById('cards');
+L.forEach((c,i)=>{const e=document.createElement('div');e.className='card'+(c[2]?' d':'');e.id='c'+i;
+ e.innerHTML=`<b><span class="n">${i+1}</span>${c[3]}</b>${c[4]}<span class="w">Course step ${all[c[0]].n} ↔ Podcast step ${all[c[1]].n} · ${c[2]?'Assumed':'Confirmed'}</span>`;
+ e.onclick=()=>pickLink(i);e.onmouseenter=()=>hover(i);e.onmouseleave=()=>hover(null);cards.appendChild(e)});
+// selection
+let sel=null;
+function hover(i){document.querySelectorAll('.glow').forEach(e=>e.classList.remove('glow'));if(i===null)return;
+ [L[i][0],L[i][1]].forEach(id=>{document.getElementById(id).classList.add('glow')})}
+function applySel(){document.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));lsvg.querySelectorAll('path,g').forEach(e=>e.classList.remove('hi','dim'));if(!sel)return;
+ const mark=(i,on)=>{const p=document.getElementById('p'+i),g=document.getElementById('g'+i);if(p)p.classList.add(on?'hi':'dim');if(g&&!on)g.classList.add('dim');if(on)document.getElementById('c'+i).classList.add('sel')};
+ const ids=sel.type==='step'?[sel.id]:[L[sel.i][0],L[sel.i][1]];
+ ids.forEach(id=>{document.getElementById(id).classList.add('sel');const ch=ilv.querySelector(`[data-id="${id}"]`);if(ch)ch.classList.add('sel')});
+ L.forEach((c,i)=>mark(i,sel.type==='step'?(c[0]===sel.id||c[1]===sel.id):i===sel.i))}
+const panel=document.getElementById('panel'),pb=document.getElementById('pbody');
+const ftag=t=>t==='cost'?'<span class="badge" style="background:var(--red);border-color:var(--redb)">A cost</span>':t==='keep'?'<span class="badge" style="background:var(--gold);border-color:var(--goldb)">A signal worth keeping</span>':'None marked';
+function pickStep(id){const s=all[id];sel={type:'step',id};applySel();
+ const lk=L.map((c,i)=>(c[0]===id||c[1]===id)?`<li>${i+1}. ${c[3]}</li>`:'').join('');
+ pb.innerHTML=`<h3>${s.lane} · step ${s.n}<br>${s.t}</h3><dl><dt>Swim lane</dt><dd>${s.lname}</dd><dt>Role</dt><dd>${s.r}</dd><dt>Tool / equipment</dt><dd>${s.tl}</dd>${s.al?`<dt>Hand-off to next step</dt><dd>${s.al}, ${s.d}</dd>`:''}<dt>Friction</dt><dd>${ftag(s.ty)}</dd><dt>Why</dt><dd>${s.why}</dd>${lk?`<dt>Connects to the other process</dt><dd><ul style="margin:2px 0 0 18px;padding:0">${lk}</ul></dd>`:''}<dt>Status</dt><dd>${s.assumed?'Contains assumptions (*)':'Confirmed from public sources'}</dd></dl>`;
+ panel.classList.add('open')}
+function pickLink(i){const c=L[i];sel={type:'link',i};applySel();
+ pb.innerHTML=`<h3>Connection ${i+1}<br>${c[3]}</h3><p style="margin:0 0 6px">${c[4]}</p><dl><dt>Video course</dt><dd>Step ${all[c[0]].n}: ${all[c[0]].t}</dd><dt>Podcast</dt><dd>Step ${all[c[1]].n}: ${all[c[1]].t}</dd><dt>Status</dt><dd>${c[2]?'Assumed (*)':'Confirmed from public sources'}</dd></dl>`;
+ panel.classList.add('open')}
+document.querySelectorAll('.box').forEach(b=>{b.onclick=()=>pickStep(b.id);b.onkeydown=k=>{if(k.key==='Enter')pickStep(b.id)}});
+ilv.querySelectorAll('.chip').forEach(c=>c.onclick=()=>pickStep(c.dataset.id));
+panel.querySelector('.x').onclick=()=>{panel.classList.remove('open');sel=null;applySel()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')panel.querySelector('.x').click()});
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{const f=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b));
+ Object.values(all).forEach(s=>{const m=f==='all'||(f==='cost'&&s.ty==='cost')||(f==='keep'&&s.ty==='keep')||(f==='assumed'&&s.assumed)||(f==='confirmed'&&!s.assumed);document.getElementById(s.id).classList.toggle('dim',!m)})});
+function redraw(){arrows('chartA1');arrows('chartA2');arrows('chartB');links()}
+window.addEventListener('resize',redraw);window.addEventListener('load',redraw);setTimeout(redraw,60);
+document.querySelectorAll('.scroller').forEach(s=>s.addEventListener('scroll',redraw));
+</script>
+</body></html>
