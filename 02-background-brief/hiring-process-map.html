@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PsychArmor Hiring Map</title>
+<style>
+:root{--crimson:#A51C30;--ink:#1E1E1E;--ink2:#3A3F44;--parch:#F3F3F1;--slate:#8996A0;--shade:#BAC5C6;
+--lane2:#F1F2F0;--line:#D9DDDC;--red:#F7DADA;--redb:#B23A3A;--gold:#F6EAC2;--goldb:#B58A1B;--tool:#2F5D7C;
+--sans:"Franklin Gothic Book","Libre Franklin","Helvetica Neue",Arial,sans-serif;
+--sansb:"Franklin Gothic Medium","Libre Franklin","Helvetica Neue",Arial,sans-serif;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--parch);color:var(--ink);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.page{max-width:1440px;margin:0 auto;padding:0 28px 48px}
+.top{border-top:6px solid var(--crimson);padding-top:18px}
+.kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#666}
+h1{font-family:var(--sansb);font-weight:normal;font-size:clamp(20px,2vw,27px);line-height:1.25;margin:6px 0 4px;max-width:1150px}
+.meta{font-size:12px;color:#666;margin-bottom:16px}
+.take{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.tk{background:#fff;border:1px solid var(--line);border-top:3px solid var(--ink);padding:12px 14px;font-size:13.5px;line-height:1.45}
+.tk .big{font-family:var(--sansb);font-size:24px;display:block;margin-bottom:2px}
+.toolbar{position:sticky;top:0;z-index:20;background:rgba(243,243,241,.96);border-bottom:1px solid var(--line);padding:9px 0;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:12px;margin-bottom:8px}
+.seg{display:inline-flex;border:1px solid var(--slate);border-radius:4px;overflow:hidden}
+.seg button{border:0;border-right:1px solid var(--shade);background:#fff;padding:5px 11px;font:inherit;cursor:pointer;color:var(--ink)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ink);color:#fff}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;color:#333;align-items:center}
+.sw{display:inline-block;width:13px;height:13px;border-radius:2px;vertical-align:-2px;margin-right:5px;border:1px solid}
+.tt{display:inline-block;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;background:var(--tool);color:#fff;border-radius:2px;padding:1px 5px;font-family:Arial,sans-serif}
+.exhibit{background:#fff;border:1px solid var(--line);margin-top:22px;padding:16px 18px 18px}
+.exh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:7px;margin-bottom:12px;flex-wrap:wrap}
+.exh h2{font-family:var(--sansb);font-weight:normal;font-size:17px;margin:0}
+.exh h2 span{color:#777;font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-right:8px}
+.exh .note{font-size:12px;color:#666}
+.scroller{overflow-x:auto}
+.chart{--g:clamp(12px,1.5vw,22px);position:relative;display:grid;column-gap:var(--g);min-width:880px}
+.ph{background:var(--ink2);color:#fff;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:7px 18px 7px 12px;margin-bottom:8px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%,10px 50%);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph.first{clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%)}
+.ph small{opacity:.7;letter-spacing:0;text-transform:none;margin-left:4px}
+.lname{font-family:var(--sansb);font-size:12px;color:var(--ink2);padding:10px 10px 10px 0;border-top:1px solid var(--line);display:flex;align-items:center;line-height:1.25}
+.lbg{border-top:1px solid var(--line);margin:0 0 0 calc(var(--g) / -2)}
+.lbg.alt{background:var(--lane2)}
+.box{min-width:0;position:relative;z-index:2;margin:9px 0;background:#fff;border:1px solid #9aa3a8;border-radius:3px;padding:7px 8px;font-size:12px;line-height:1.3;cursor:pointer;transition:box-shadow .15s,opacity .2s,transform .15s;align-self:center}
+.box:hover{box-shadow:0 3px 12px rgba(0,0,0,.14);transform:translateY(-1px)}
+.box:focus{outline:2px solid var(--ink);outline-offset:2px}
+.box.cost{background:var(--red);border-color:var(--redb)}
+.box.keep{background:var(--gold);border-color:var(--goldb)}
+.box.target{box-shadow:0 0 0 2px var(--tool)}
+.box .hd{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.num{flex:none;width:18px;height:18px;border-radius:50%;background:var(--ink);color:#fff;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-family:Arial,sans-serif}
+.box .hd .tt{margin-left:auto}
+.box b{font-family:var(--sansb);font-weight:normal;font-size:12.5px;display:block}
+.box .r{display:block;font-size:11px;color:#444;margin-top:3px}
+.box .t{display:block;font-size:11px;color:#666;font-style:italic}
+.box.sel{box-shadow:0 0 0 3px var(--ink)}
+.box.dim{opacity:.2}
+.dname{font-size:11px;color:#555;padding:8px 10px 0 0;border-top:1px solid var(--ink);line-height:1.25}
+.dl{border-top:1px solid var(--ink);padding-top:8px;text-align:center}
+.pill{display:inline-block;font-size:11px;font-family:Arial,sans-serif;border-radius:10px;padding:3px 7px;white-space:nowrap}
+svg.ar{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+svg.ar path{fill:none;stroke:#6f777c;stroke-width:1.4}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:26px;position:relative;margin:6px 0 4px}
+.fs{position:relative;background:#fff;border:1px solid #9aa3a8;border-top:4px solid var(--tool);padding:10px 12px;font-size:13px;line-height:1.4}
+.fs.h{border-top-color:var(--ink)}
+.fs b{font-family:var(--sansb);font-weight:normal;display:block;font-size:14px;margin-bottom:3px}
+.fs .who{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#777;display:block;margin-bottom:4px}
+.fs:not(:last-child)::after{content:"\25B6";position:absolute;right:-19px;top:50%;transform:translateY(-50%);color:#6f777c;font-size:12px}
+.guard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.gd{border:1px solid var(--line);border-left:4px solid var(--crimson);padding:10px 12px;font-size:13px;line-height:1.45}
+.gd b{font-family:var(--sansb);font-weight:normal;display:block;margin-bottom:2px}
+.gd .w{font-size:11px;color:#777;display:block;margin-top:4px}
+.caption{margin-top:22px;font-family:Georgia,serif;font-size:14px;line-height:1.6;max-width:1000px;color:#222}
+.src{font-size:11.5px;color:#666;margin-top:8px;line-height:1.5}
+#panel{position:fixed;right:18px;top:70px;width:350px;max-width:calc(100vw - 36px);max-height:calc(100vh - 90px);overflow-y:auto;background:#fff;border:1px solid var(--line);border-top:4px solid var(--crimson);box-shadow:0 10px 30px rgba(0,0,0,.18);padding:14px 16px;font-size:13px;line-height:1.5;z-index:30;transform:translateX(120%);transition:transform .22s ease}
+#panel.open{transform:none}
+#panel h3{font-family:var(--sansb);font-weight:normal;font-size:16px;margin:0 24px 8px 0;line-height:1.3}
+#panel .x{position:absolute;top:8px;right:10px;border:0;background:none;font-size:20px;cursor:pointer;color:#555}
+#panel dt{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-top:8px}
+#panel dd{margin:1px 0 0}
+#panel .badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:10px;border:1px solid}
+@media (max-width:900px){.take,.guard,.flow{grid-template-columns:1fr}.fs:not(:last-child)::after{content:"\25BC";right:50%;top:auto;bottom:-20px;transform:none}.page{padding:0 14px 40px}}
+@media print{.toolbar,#panel{display:none}.exhibit{break-inside:avoid}}
+</style></head><body>
+<div class="page">
+<div class="top">
+ <div class="kicker">MLD-371 · Kennedy Coders · PsychArmor · Hiring process map, draft v2</div>
+ <h1>PsychArmor's assumed full-time hiring process takes 14–21 weeks; screening resumes and scheduling first calls is where a small team loses the most time</h1>
+ <div class="meta">8 October 2026 · Almost entirely assumed: PsychArmor's careers page shows open roles but not its process · Not yet validated with staff · Click any step for detail</div>
+</div>
+<div class="take">
+ <div class="tk"><span class="big">14–21 wks*</span>from identifying the need to the new hire's start date, for a full-time role.</div>
+ <div class="tk"><span class="big">2 steps</span>are candidates for the screening tool: the resume screen and the first-round call. Final interviews and offers stay human.</div>
+ <div class="tk"><span class="big">CA rules apply</span>Since 1 Oct 2025, California anti-discrimination law covers automated hiring tools. The tool should judge content only, never face, voice, or demeanor.</div>
+</div>
+
+<div class="toolbar">
+ <div class="seg" id="filters"><button data-f="all" class="on">All steps</button><button data-f="target">Tool targets</button><button data-f="cost">Costs</button><button data-f="keep">Worth keeping</button><button data-f="confirmed">Confirmed</button></div>
+ <div class="lg">
+  <span><span class="sw" style="background:var(--red);border-color:var(--redb)"></span>Friction: a cost</span>
+  <span><span class="sw" style="background:var(--gold);border-color:var(--goldb)"></span>Friction: a signal worth keeping</span>
+  <span><span class="sw" style="background:#fff;border-color:#9aa3a8"></span>No friction marked</span>
+  <span><span class="tt">Tool</span> where the screening tool would plug in</span>
+  <span><b>*</b> our assumption, not confirmed by PsychArmor</span>
+ </div>
+</div>
+
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 1a</span>Full-time hiring, by role · steps 1–6</h2><div class="note">14–21 weeks* end to end · continues in 1b</div></div>
+ <div class="scroller"><div class="chart" id="ft1"></div></div></section>
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 1b</span>Full-time hiring, by role · steps 7–11</h2><div class="note">Continued from 1a</div></div>
+ <div class="scroller"><div class="chart" id="ft2"></div></div></section>
+
+<section class="exhibit"><div class="exh"><h2><span>Exhibit 2</span>Proposed: where the screening tool replaces steps 5–6</h2><div class="note">Concept only · to be scoped with PsychArmor</div></div>
+ <div class="flow">
+  <div class="fs"><span class="who">Candidate</span><b>Upload resume, record video</b>Answers one set prompt on video. Told up front that AI assists screening, and offered a written alternative.</div>
+  <div class="fs"><span class="who">Tool</span><b>Transcribe</b>Converts the video to text. Only the words move forward; the image and voice are not scored.</div>
+  <div class="fs"><span class="who">Tool</span><b>Check against key items</b>Marks each required item as met, not met, or unclear, quoting the resume or transcript as evidence.</div>
+  <div class="fs h"><span class="who">Hiring manager</span><b>Review evidence</b>Reads the checklist and quotes, can watch the video, and overrides any call.</div>
+  <div class="fs h"><span class="who">Hiring manager</span><b>Decide who advances</b>A person makes every advance or reject decision. The tool never rejects anyone.</div>
+ </div>
+ <div class="guard">
+  <div class="gd"><b>Content, not demeanor</b>No scoring of facial expression, tone, accent, or appearance. California's rules name these as discrimination risks.<span class="w">CA Civil Rights Council ADS regulations, effective 1 Oct 2025</span></div>
+  <div class="gd"><b>Accommodation path</b>PsychArmor's applicant pool likely includes veterans with service-connected disabilities. A written alternative to video protects them and the organization.<span class="w">FEHA and ADA accommodation duties; design choice</span></div>
+  <div class="gd"><b>Test, log, keep records</b>Test for bias before use and on a schedule; keep inputs, outputs, and decisions for four years.<span class="w">CA ADS regulations: anti-bias testing as a defense, 4-year record retention</span></div>
+ </div>
+</section>
+
+<p class="caption">This map shows how PsychArmor likely hires for a full-time role, using its posted Learning Engagement &amp; Partnership Manager opening as the example. Almost every step is our assumption: PsychArmor's careers page lists open roles and a "View Job Description" link, but does not describe how applications are received, screened, or decided. Roles come from the team page; the reporting line for the posted Learning Engagement &amp; Partnership Manager role is confirmed. Everything marked with an asterisk, including tools, owners, steps, and delays, must be confirmed with staff. Gold steps are where human judgment matters most, such as interviews for mission fit. Red steps are hypothesized time costs. Steps outlined in blue are where the proposed screening tool would plug in, with a person still making every decision.</p>
+<div class="src">Sources: psycharmor.org/careers and /team, accessed 8 Oct 2026. California Civil Rights Council automated-decision system regulations, effective 1 Oct 2025 (summaries: Mayer Brown, CalChamber, Akin Gump). Color scheme follows the Studio 5 prompt.</div>
+</div>
+
+<aside id="panel" role="dialog" aria-live="polite"><button class="x" aria-label="Close">×</button><div id="pbody"></div></aside>
+
+<script>
+// id, title, role, tool, type, handoff, delay, why, lane, toolTarget
+const FT=[
+["f1","Identify need, approve headcount","Hiring manager + CEO*","Budget sheet*","keep","hand-off","2–4 wks*","Keep: a deliberate decision, given an FY2024 deficit of about $409,000.",1,0],
+["f2","Write job description","Hiring manager","Google Docs*","","hand-off","1 wk*","Job descriptions are linked from the careers page (confirmed).",1,0],
+["f3","Post role","Director of Business Operations*","psycharmor.org/careers, LinkedIn*, veteran job boards*","","open for","3–4 wks*","Careers page posting confirmed. Other channels assumed.",2,0],
+["f4","Apply: resume and cover letter","Candidate","Email inbox or web form*","cost","hand-off","1 wk*","Cost: applications likely land in an inbox, not a tracking system*.",0,0],
+["f5","Resume screen","Hiring manager","PDFs + spreadsheet tracker*","cost","scheduling","1–2 wks*","Cost: manual read of every resume by a manager with a full-time job. Main target for the tool.",1,1],
+["f6","First-round screen call","Director of Business Operations* or hiring manager","Phone or Zoom*","cost","scheduling","1–2 wks*","Cost: calendar back-and-forth for 20 to 30 minute calls*. Target for the recorded video prompt.",2,1],
+["f7","Panel interview","Hiring manager + team","Zoom*","keep","hand-off","1 wk*","Keep: judging mission fit for work serving veterans and families needs people.",1,0],
+["f8","Work sample or presentation","Candidate","Shared doc or slides*","keep","hand-off","1 wk*","Keep: direct evidence of the work.",0,0],
+["f9","Reference checks","Director of Business Operations*","Phone*","cost","hand-off","1 wk*","Cost: phone tag.",2,0],
+["f10","Approval and offer","CEO","DocuSign*","","notice period","2–4 wks*","CEO sign-off assumed at ~16 staff.",3,0],
+["f11","Background check and onboarding","Director of Business Operations*","Payroll and HR system*","","","","Ends the process.",2,0]];
+const LF=["Candidate","Hiring manager &amp; team","Business operations","CEO"];
+const CFG={
+ ft1:{rows:FT.slice(0,6),off:0,cont:"to step 7, Exhibit 1b",lanes:LF,phases:[["Plan",1,2],["Source",3,4],["Screen",5,6]],name:"Full-time"},
+ ft2:{rows:FT.slice(6),off:6,from:"from 6",lanes:LF,phases:[["Assess",7,9],["Decide &amp; onboard",10,11]],name:"Full-time"}};
+const all={};
+const wk=d=>{if(!d)return null;const m=d.match(/([\d.]+)(?:–([\d.]+))?\s*(day|wk|mo|yr)/);if(!m)return null;const v=(+m[1]+ +(m[2]||m[1]))/2;return v*({day:1/7,wk:1,mo:4.3,yr:52}[m[3]])};
+function build(id){const c=CFG[id],el=document.getElementById(id),n=c.rows.length,o=c.off;
+ el.style.gridTemplateColumns=`150px repeat(${n},minmax(0,1fr))`;
+ let h=`<div style="grid-row:1;grid-column:1"></div>`;
+ c.phases.forEach(([t,a,b],i)=>h+=`<div class="ph${i?'':' first'}" style="grid-row:1;grid-column:${a-o+1}/${b-o+2}">${t}<small>${a===b?'step '+a:'steps '+a+'–'+b}</small></div>`);
+ c.lanes.forEach((ln,i)=>{h+=`<div class="lname" style="grid-row:${i+2};grid-column:1">${ln}</div><div class="lbg${i%2?' alt':''}" style="grid-row:${i+2};grid-column:2/-1"></div>`});
+ const dr=c.lanes.length+2;h+=`<div class="dname" style="grid-row:${dr};grid-column:1">Wait before next step</div>`;
+ c.rows.forEach((s,i)=>{const [sid,t,r,tl,ty,al,d,why,lane,tg]=s;
+  all[sid]={id:sid,t,r,tl,ty,al,d,why,tg,lane:c.name,n:o+i+1,assumed:/\*/.test(r+tl+d),lname:c.lanes[lane]};
+  h+=`<div class="box ${ty}${tg?' target':''}" id="${sid}" tabindex="0" style="grid-row:${lane+2};grid-column:${i+2}"><div class="hd"><span class="num">${o+i+1}</span>${tg?'<span class="tt">Tool</span>':''}</div><b>${t}</b><span class="r">${r}</span><span class="t">${tl}</span></div>`;
+  let pill='<span class="pill" style="color:#999">—</span>';
+  if(d){const a=Math.min(1,wk(d)/5);pill=`<span class="pill" style="background:rgba(178,58,58,${(.08+a*.82).toFixed(2)});color:${a>.45?'#fff':'#222'}" title="${al}">${d}</span>`}
+  h+=`<div class="dl" style="grid-row:${dr};grid-column:${i+2}">${pill}</div>`});
+ h+=`<svg class="ar"><defs><marker id="m${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6f777c" stroke="none"/></marker></defs></svg>`;
+ el.innerHTML=h}
+const NS='http://www.w3.org/2000/svg';
+function arrows(id){const el=document.getElementById(id),svg=el.querySelector('svg.ar'),cr=el.getBoundingClientRect(),c=CFG[id],rows=c.rows;
+ [...svg.querySelectorAll('.c')].forEach(p=>p.remove());
+ const path=(d,dash)=>{const p=document.createElementNS(NS,'path');p.setAttribute('class','c');p.setAttribute('d',d);if(dash)p.setAttribute('stroke-dasharray','4 3');p.setAttribute('marker-end',`url(#m${id})`);svg.appendChild(p)};
+ const text=(tx,x,y,an)=>{const t=document.createElementNS(NS,'text');t.setAttribute('class','c');t.setAttribute('x',x);t.setAttribute('y',y);t.setAttribute('text-anchor',an);t.setAttribute('style','font:11px Arial,sans-serif;fill:#555');t.textContent=tx;svg.appendChild(t)};
+ for(let i=0;i<rows.length-1;i++){const a=document.getElementById(rows[i][0]).getBoundingClientRect(),b=document.getElementById(rows[i+1][0]).getBoundingClientRect();
+  const x1=a.right-cr.left,y1=a.top+a.height/2-cr.top,x2=b.left-cr.left-1,y2=b.top+b.height/2-cr.top,xm=(x1+x2)/2;
+  path(Math.abs(y1-y2)<2?`M${x1},${y1} L${x2},${y2}`:`M${x1},${y1} L${xm},${y1} L${xm},${y2} L${x2},${y2}`)}
+ if(c.cont){const a=document.getElementById(rows[rows.length-1][0]).getBoundingClientRect(),x=a.right-cr.left-20,y=a.bottom-cr.top+18;path(`M${x},${a.bottom-cr.top} L${x},${y} L${cr.width-4},${y}`,1);text(c.cont,cr.width-6,y-6,'end')}
+ if(c.from){const b=document.getElementById(rows[0][0]).getBoundingClientRect(),y=b.top+b.height/2-cr.top,x2=b.left-cr.left-1;path(`M${x2-46},${y} L${x2},${y}`,1);text(c.from,x2-23,y-6,'middle')}}
+['ft1','ft2'].forEach(build);
+let sel=null;const panel=document.getElementById('panel'),pb=document.getElementById('pbody');
+const ftag=t=>t==='cost'?'<span class="badge" style="background:var(--red);border-color:var(--redb)">A cost</span>':t==='keep'?'<span class="badge" style="background:var(--gold);border-color:var(--goldb)">A signal worth keeping</span>':'None marked';
+function pick(id){const s=all[id];document.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));document.getElementById(id).classList.add('sel');
+ pb.innerHTML=`<h3>${s.lane} · step ${s.n}<br>${s.t}</h3><dl><dt>Swim lane</dt><dd>${s.lname}</dd><dt>Role</dt><dd>${s.r}</dd><dt>Tool / channel</dt><dd>${s.tl}</dd>${s.al?`<dt>Hand-off to next step</dt><dd>${s.al}, ${s.d}</dd>`:''}<dt>Friction</dt><dd>${ftag(s.ty)}</dd><dt>Why</dt><dd>${s.why}</dd>${s.tg?'<dt>Screening tool</dt><dd>Target step: see Exhibit 2.</dd>':''}<dt>Status</dt><dd>${s.assumed?'Contains assumptions (*)':'Confirmed from public sources'}</dd></dl>`;
+ panel.classList.add('open')}
+document.querySelectorAll('.box').forEach(b=>{b.onclick=()=>pick(b.id);b.onkeydown=k=>{if(k.key==='Enter')pick(b.id)}});
+panel.querySelector('.x').onclick=()=>{panel.classList.remove('open');document.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'))};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')panel.querySelector('.x').click()});
+document.querySelectorAll('#filters button').forEach(b=>b.onclick=()=>{const f=b.dataset.f;document.querySelectorAll('#filters button').forEach(x=>x.classList.toggle('on',x===b));
+ Object.values(all).forEach(s=>{const m=f==='all'||(f==='target'&&s.tg)||(f==='cost'&&s.ty==='cost')||(f==='keep'&&s.ty==='keep')||(f==='confirmed'&&!s.assumed);document.getElementById(s.id).classList.toggle('dim',!m)})});
+const redraw=()=>['ft1','ft2'].forEach(arrows);
+window.addEventListener('resize',redraw);window.addEventListener('load',redraw);setTimeout(redraw,60);
+document.querySelectorAll('.scroller').forEach(s=>s.addEventListener('scroll',redraw));
+</script>
+</body></html>
